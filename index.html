@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>8D Audio Music Production</title>
+    <link rel="stylesheet" href="index.css">
+    <link rel="icon" type="image/png" href="https://8daudiomusicpro.github.io/8daudiomusicpr/logo.png.png">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap');
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: #fafafa;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .box {
+            width: 350px;
+            background: #fff;
+            padding: 30px;
+            border: 1px solid #dbdbdb;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        .box h2 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        .input-box {
+            width: 100%;
+            margin-bottom: 15px;
+        }
+        .input-box input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #dbdbdb;
+            border-radius: 5px;
+            outline: none;
+            font-size: 14px;
+        }
+        .btn {
+            width: 100%;
+            padding: 10px;
+            background: #0095f6;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .btn:hover {
+            background: #0078e6;
+        }
+        .google-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #fff;
+            color: #757575;
+            border: 1px solid #dbdbdb;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+            padding: 10px;
+            gap: 10px;
+        }
+        .google-btn img {
+            width: 20px;
+            height: 20px;
+        }
+        .switch {
+            margin-top: 20px;
+            font-size: 14px;
+        }
+        .switch a {
+            color: #0095f6;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .terms {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+        .terms input {
+            margin-right: 10px;
+        }
+        #login-error {
+            color: red;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="box" id="login-box">
+            <h2>Login</h2>
+            <div class="input-box">
+                <input type="email" id="login-email" placeholder="Email" required>
+            </div>
+            <div class="input-box">
+                <input type="password" id="login-password" placeholder="Password" required>
+            </div>
+            <div class="terms">
+                <input type="checkbox" id="terms-checkbox" required>
+                <label for="terms-checkbox">I accept the <a href="https://8daudiomusicpro.github.io/8daudiomusicpro/">Terms and Conditions</a></label>
+            </div>
+            <button class="btn" id="login-btn">Login</button>
+            <button class="google-btn" id="google-signin-btn">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/768px-Google_%22G%22_logo.svg.png" alt="Google Logo">
+                Sign in with Google
+            </button>
+            <p class="switch">Don't have an account? <a href="https://8daudiomusicpro.github.io/sign-up/" id="register-link">Sign Up</a></p>
+            <p id="login-error"></p>
+        </div>
+    </div>
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-auth.js";
+        
+        const firebaseConfig = {
+            apiKey: "AIzaSyCL5UmHfiSao6e3HdoZwVv-fUCOpe7fp58",
+            authDomain: "login-96909.firebaseapp.com",
+            projectId: "login-96909",
+            storageBucket: "login-96909.appspot.com",
+            messagingSenderId: "1041589784359",
+            appId: "1:1041589784359:web:a213e9d92307d5b831a302"
+        };
+        
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth();
+        const provider = new GoogleAuthProvider();
+        provider.setCustomParameters({ prompt: "select_account" });
+        
+        function validateTerms() {
+            return document.getElementById('terms-checkbox').checked;
+        }
+        
+        document.getElementById('login-btn').addEventListener('click', () => {
+            if (!validateTerms()) {
+                document.getElementById('login-error').innerText = "You must accept the Terms and Conditions to continue.";
+                return;
+            }
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            
+            signInWithEmailAndPassword(auth, email, password)
+                .then(() => {
+                    alert("Login Successful");
+                    window.location.href = "https://8daudiomusicpro.github.io/8daudiomusicpr/?";
+                })
+                .catch(() => {
+                    document.getElementById('login-error').innerText = "Wrong email or password. Please try again.";
+                });
+        });
+        
+        document.getElementById('google-signin-btn').addEventListener('click', () => {
+            if (!validateTerms()) {
+                document.getElementById('login-error').innerText = "You must accept the Terms and Conditions to continue.";
+                return;
+            }
+            signInWithPopup(auth, provider)
+                .then(() => {
+                    alert("Google Sign-In Successful");
+                    window.location.href = "https://8daudiomusicpro.github.io/8daudiomusicpr/?";
+                })
+                .catch(() => {
+                    alert("Google Sign-In Failed");
+                });
+        });
+    </script>
+</body>
+</html>
